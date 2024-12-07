@@ -50,3 +50,15 @@ func (s *Screen) SetCell(x, y uint8, cell Cell) error {
 	s.buffer[y][x] = cell
 	return nil
 }
+
+// GetCell retrieves a cell from the screen buffer
+func (s *Screen) GetCell(x, y uint8) (Cell, error) {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+
+	if x >= s.width || y >= s.height {
+		return Cell{}, fmt.Errorf("coordinates out of bounds: (%d, %d)", x, y)
+	}
+
+	return s.buffer[y][x], nil
+}
