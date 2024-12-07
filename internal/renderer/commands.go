@@ -6,4 +6,9 @@ type CommandType uint8
 const (
 	// Screen Setup Command
 	CommandScreenSetup CommandType = 0x1
+
+	// Drawing Commands
+	CommandDrawCharacter CommandType = 0x2
+	CommandDrawLine      CommandType = 0x3
+	CommandRenderText    CommandType = 0x4
 )
