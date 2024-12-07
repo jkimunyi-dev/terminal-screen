@@ -11,4 +11,9 @@ const (
 	CommandDrawCharacter CommandType = 0x2
 	CommandDrawLine      CommandType = 0x3
 	CommandRenderText    CommandType = 0x4
+
+	// Cursor and Rendering Control
+	CommandMoveCursor   CommandType = 0x5
+	CommandDrawAtCursor CommandType = 0x6
+	CommandClearScreen  CommandType = 0x7
 )
