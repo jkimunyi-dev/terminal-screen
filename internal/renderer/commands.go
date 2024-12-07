@@ -16,4 +16,7 @@ const (
 	CommandMoveCursor   CommandType = 0x5
 	CommandDrawAtCursor CommandType = 0x6
 	CommandClearScreen  CommandType = 0x7
+
+	// End of Stream
+	CommandEndOfStream CommandType = 0xFF
 )
