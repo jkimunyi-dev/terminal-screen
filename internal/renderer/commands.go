@@ -3,6 +3,9 @@ package renderer
 // CommandType represents the different types of terminal rendering commands
 type CommandType uint8
 
+// ColorMode defines the available color modes for the terminal
+type ColorMode uint8
+
 const (
 	// Screen Setup Command
 	CommandScreenSetup CommandType = 0x1
