@@ -1,6 +1,9 @@
 package renderer
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // Screen represents the terminal screen buffer
 type Screen struct {
@@ -33,4 +36,17 @@ func NewScreen(width, height uint8, mode ColorMode) *Screen {
 	}
 
 	return screen
+}
+
+// SetCell updates a specific cell in the screen buffer
+func (s *Screen) SetCell(x, y uint8, cell Cell) error {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	if x >= s.width || y >= s.height {
+		return fmt.Errorf("coordinates out of bounds: (%d, %d)", x, y)
+	}
+
+	s.buffer[y][x] = cell
+	return nil
 }
