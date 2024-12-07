@@ -10,3 +10,10 @@ type Screen struct {
 	colorMode ColorMode
 	buffer    [][]Cell
 }
+
+type Cell struct {
+	Char      rune
+	FgColor   uint8
+	BgColor   uint8
+	Highlight bool
+}
