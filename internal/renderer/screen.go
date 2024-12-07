@@ -62,3 +62,15 @@ func (s *Screen) GetCell(x, y uint8) (Cell, error) {
 
 	return s.buffer[y][x], nil
 }
+
+// Clear resets the entire screen buffer
+func (s *Screen) Clear() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	for y := range s.buffer {
+		for x := range s.buffer[y] {
+			s.buffer[y][x] = Cell{}
+		}
+	}
+}
