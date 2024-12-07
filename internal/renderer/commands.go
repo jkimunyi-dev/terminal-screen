@@ -29,3 +29,10 @@ const (
 	ColorMode16         ColorMode = 0x01
 	ColorMode256        ColorMode = 0x02
 )
+
+// Command represents a single command in the binary stream
+type Command struct {
+	Type   CommandType
+	Length uint8
+	Data   []byte
+}
