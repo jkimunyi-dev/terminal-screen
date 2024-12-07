@@ -1,5 +1,7 @@
 package renderer
 
+import "fmt"
+
 // CommandType represents the different types of terminal rendering commands
 type CommandType uint8
 
@@ -36,3 +38,28 @@ type Command struct {
 	Length uint8
 	Data   []byte
 }
+
+// Parse parses a raw byte stream into a Command
+func Parse(data []byte) (*Command, error) {
+	if len(data) < 2 {
+		return nil, ErrInsufficientData
+	}
+
+	cmd := &Command{
+		Type:   CommandType(data[0]),
+		Length: data[1],
+	}
+
+	if len(data) < int(cmd.Length+2) {
+		return nil, ErrInsufficientData
+	}
+
+	cmd.Data = data[2 : 2+cmd.Length]
+	return cmd, nil
+}
+
+// Custom error types for command parsing
+var (
+	ErrInsufficientData = fmt.Errorf("insufficient data for command")
+	ErrInvalidCommand   = fmt.Errorf("invalid command type")
+)
