@@ -22,6 +22,12 @@ type Cell struct {
 	Highlight bool
 }
 
+// ScreenManager manages screen creation and lifecycle
+type ScreenManager struct {
+	currentScreen *Screen
+	mutex         sync.Mutex
+}
+
 // ScreenSetupOptions provides additional configuration for screen initialization
 type ScreenSetupOptions struct {
 	// BackgroundColor sets the initial background color for the entire screen
