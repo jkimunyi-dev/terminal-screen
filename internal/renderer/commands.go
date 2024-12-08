@@ -49,6 +49,13 @@ type TerminalRenderer struct {
 	screenManager *ScreenManager
 }
 
+// NewTerminalRenderer creates a new terminal renderer
+func NewTerminalRenderer() *TerminalRenderer {
+	return &TerminalRenderer{
+		screenManager: NewScreenManager(),
+	}
+}
+
 // Parse parses a raw byte stream into a Command
 func Parse(data []byte) (*Command, error) {
 	if len(data) < 2 {
