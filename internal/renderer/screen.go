@@ -28,6 +28,11 @@ type ScreenManager struct {
 	mutex         sync.Mutex
 }
 
+// NewScreenManager creates a new screen manager
+func NewScreenManager() *ScreenManager {
+	return &ScreenManager{}
+}
+
 // ScreenSetupOptions provides additional configuration for screen initialization
 type ScreenSetupOptions struct {
 	// BackgroundColor sets the initial background color for the entire screen
@@ -95,4 +100,60 @@ func (s *Screen) Clear() {
 			s.buffer[y][x] = Cell{}
 		}
 	}
+}
+
+// HandleScreenSetupCommand processes the screen setup command
+func (sm *ScreenManager) HandleScreenSetupCommand(data []byte, options *ScreenSetupOptions) (*Screen, error) {
+	// Validate input data
+	if len(data) < 3 {
+		return nil, fmt.Errorf("insufficient data for screen setup: need at least 3 bytes, got %d", len(data))
+	}
+
+	// Extract screen dimensions and color mode
+	width := data[0]
+	height := data[1]
+	colorMode := ColorMode(data[2])
+
+	// Validate dimensions
+	if width == 0 || height == 0 {
+		return nil, fmt.Errorf("invalid screen dimensions: width=%d, height=%d", width, height)
+	}
+
+	// Validate color mode
+	switch colorMode {
+	case ColorModeMonochrome, ColorMode16, ColorMode256:
+		// Valid color modes
+	default:
+		return nil, fmt.Errorf("unsupported color mode: %d", colorMode)
+	}
+
+	// Apply default options if not provided
+	if options == nil {
+		options = DefaultScreenSetupOptions()
+	}
+
+	// Create new screen
+	screen := NewScreen(width, height, colorMode)
+
+	// Initialize screen with background and fill character
+	for y := uint8(0); y < height; y++ {
+		for x := uint8(0); x < width; x++ {
+			err := screen.SetCell(x, y, Cell{
+				Char:      options.InitialFillCharacter,
+				FgColor:   7, // Default light gray foreground
+				BgColor:   options.BackgroundColor,
+				Highlight: false,
+			})
+			if err != nil {
+				return nil, fmt.Errorf("error initializing screen cell at (%d, %d): %v", x, y, err)
+			}
+		}
+	}
+
+	// Safely update the current screen
+	sm.mutex.Lock()
+	defer sm.mutex.Unlock()
+	sm.currentScreen = screen
+
+	return screen, nil
 }
