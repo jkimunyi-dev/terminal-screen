@@ -102,3 +102,42 @@ func (tr *TerminalRenderer) drawLine(screen *Screen, x1, y1, x2, y2 uint8, color
 
 	return nil
 }
+
+// handleRenderTextCommand handles the render text command (0x4)
+func (tr *TerminalRenderer) handleRenderTextCommand(cmd *Command) error {
+	// Validate minimum command data length
+	if len(cmd.Data) < 3 {
+		return fmt.Errorf("invalid render text command length: at least 3 bytes required, got %d", len(cmd.Data))
+	}
+
+	// Extract coordinates and color
+	x, y := cmd.Data[0], cmd.Data[1]
+	colorIndex := cmd.Data[2]
+
+	// Extract text (remaining bytes)
+	text := cmd.Data[3:]
+
+	// Get current screen
+	screen := tr.GetCurrentScreen()
+	if screen == nil {
+		return fmt.Errorf("no screen initialized")
+	}
+
+	// Render text character by character
+	for i, b := range text {
+		char := rune(b)
+		cellX := x + uint8(i)
+
+		cell := Cell{
+			Char:    char,
+			FgColor: colorIndex,
+		}
+
+		err := screen.SetCell(cellX, y, cell)
+		if err != nil {
+			return fmt.Errorf("error rendering text at (%d, %d): %v", cellX, y, err)
+		}
+	}
+
+	return nil
+}
