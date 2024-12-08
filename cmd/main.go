@@ -8,22 +8,6 @@ import (
 )
 
 func main() {
-	// Example of creating a screen
-	screen := renderer.NewScreen(80, 24, renderer.ColorMode16)
-
-	// Example of setting a cell
-	err := screen.SetCell(10, 5, renderer.Cell{
-		Char:    'H',
-		FgColor: 1, // Red foreground
-		BgColor: 0, // Black background
-	})
-
-	if err != nil {
-		log.Fatalf("Error setting cell: %v", err)
-	}
-
-	fmt.Println("Terminal Screen Renderer initialized successfully!")
-
 	// Create a new terminal renderer
 	termRenderer := renderer.NewTerminalRenderer()
 
@@ -35,8 +19,40 @@ func main() {
 	}
 
 	// Handle the command
-	err = termRenderer.HandleCommand(cmd)
+	err := termRenderer.HandleCommand(cmd)
 	if err != nil {
 		log.Fatalf("Screen setup failed: %v", err)
 	}
+
+	// Retrieve the current screen
+	screen := termRenderer.GetCurrentScreen()
+	if screen == nil {
+		log.Fatal("No screen created")
+	}
+
+	// Print out screen details
+	fmt.Printf("Screen Created:\n")
+	fmt.Printf("Width: %d\n", screen.GetWidth())
+	fmt.Printf("Height: %d\n", screen.GetHeight())
+	fmt.Printf("Color Mode: %s\n", renderer.ColorModeToString(screen.GetColorMode()))
+
+	// Example of setting and getting a cell
+	err = screen.SetCell(10, 5, renderer.Cell{
+		Char:    'H',
+		FgColor: 1, // Red foreground
+		BgColor: 0, // Black background
+	})
+	if err != nil {
+		log.Fatalf("Error setting cell: %v", err)
+	}
+
+	// Retrieve and print the cell we just set
+	cell, err := screen.GetCell(10, 5)
+	if err != nil {
+		log.Fatalf("Error getting cell: %v", err)
+	}
+	fmt.Printf("\nCell at (10,5):\n")
+	fmt.Printf("Character: %c\n", cell.Char)
+	fmt.Printf("Foreground Color: %d\n", cell.FgColor)
+	fmt.Printf("Background Color: %d\n", cell.BgColor)
 }
