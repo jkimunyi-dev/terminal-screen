@@ -157,3 +157,10 @@ func (sm *ScreenManager) HandleScreenSetupCommand(data []byte, options *ScreenSe
 
 	return screen, nil
 }
+
+// GetCurrentScreen returns the currently active screen
+func (sm *ScreenManager) GetCurrentScreen() *Screen {
+	sm.mutex.Lock()
+	defer sm.mutex.Unlock()
+	return sm.currentScreen
+}
