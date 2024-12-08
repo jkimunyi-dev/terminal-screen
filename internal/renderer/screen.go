@@ -164,3 +164,31 @@ func (sm *ScreenManager) GetCurrentScreen() *Screen {
 	defer sm.mutex.Unlock()
 	return sm.currentScreen
 }
+
+// ValidateScreenSetupCommand provides additional validation for the screen setup command
+func ValidateScreenSetupCommand(data []byte) error {
+	if len(data) < 3 {
+		return fmt.Errorf("screen setup command requires at least 3 bytes")
+	}
+
+	width := data[0]
+	height := data[1]
+	colorMode := data[2]
+
+	// Validate width and height
+	if width == 0 || width > 255 {
+		return fmt.Errorf("invalid screen width: %d (must be between 1 and 255)", width)
+	}
+
+	if height == 0 || height > 255 {
+		return fmt.Errorf("invalid screen height: %d (must be between 1 and 255)", height)
+	}
+
+	// Validate color mode
+	switch colorMode {
+	case 0x00, 0x01, 0x02:
+		return nil
+	default:
+		return fmt.Errorf("invalid color mode: %d (must be 0x00, 0x01, or 0x02)", colorMode)
+	}
+}
