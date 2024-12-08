@@ -22,6 +22,14 @@ type Cell struct {
 	Highlight bool
 }
 
+// ScreenSetupOptions provides additional configuration for screen initialization
+type ScreenSetupOptions struct {
+	// BackgroundColor sets the initial background color for the entire screen
+	BackgroundColor uint8
+	// InitialFillCharacter sets the character used to fill the initial screen
+	InitialFillCharacter rune
+}
+
 // NewScreen initializes a new screen with given dimensions and color mode
 func NewScreen(width, height uint8, mode ColorMode) *Screen {
 	screen := &Screen{
