@@ -57,11 +57,19 @@ func NewTerminalRenderer() *TerminalRenderer {
 }
 
 // HandleCommand processes incoming commands
+// In commands.go
 func (tr *TerminalRenderer) HandleCommand(cmd *Command) error {
+	drawingHandler := NewDrawingCommandHandler(tr)
+
 	switch cmd.Type {
 	case CommandScreenSetup:
 		return tr.handleScreenSetupCommand(cmd)
-	// Add other command handlers here in future steps
+	case CommandDrawCharacter:
+		return drawingHandler.HandleDrawCharacterCommand(cmd)
+	case CommandDrawLine:
+		return drawingHandler.HandleDrawLineCommand(cmd)
+	case CommandRenderText:
+		return drawingHandler.HandleRenderTextCommand(cmd)
 	default:
 		return fmt.Errorf("unsupported command type: %d", cmd.Type)
 	}
