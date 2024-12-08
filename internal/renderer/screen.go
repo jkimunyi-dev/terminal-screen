@@ -74,3 +74,24 @@ func (s *Screen) Clear() {
 		}
 	}
 }
+
+// GetWidth returns the screen width
+func (s *Screen) GetWidth() uint8 {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+	return s.width
+}
+
+// GetHeight returns the screen height
+func (s *Screen) GetHeight() uint8 {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+	return s.height
+}
+
+// GetColorMode returns the screen's color mode
+func (s *Screen) GetColorMode() ColorMode {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+	return s.colorMode
+}
