@@ -56,6 +56,33 @@ func NewTerminalRenderer() *TerminalRenderer {
 	}
 }
 
+// HandleCommand processes incoming commands
+func (tr *TerminalRenderer) HandleCommand(cmd *Command) error {
+	switch cmd.Type {
+	case CommandScreenSetup:
+		return tr.handleScreenSetupCommand(cmd)
+	// Add other command handlers here in future steps
+	default:
+		return fmt.Errorf("unsupported command type: %d", cmd.Type)
+	}
+}
+
+// handleScreenSetupCommand specific handler
+func (tr *TerminalRenderer) handleScreenSetupCommand(cmd *Command) error {
+	// Validate command data
+	if err := ValidateScreenSetupCommand(cmd.Data); err != nil {
+		return fmt.Errorf("invalid screen setup command: %v", err)
+	}
+
+	// Use default screen setup options
+	_, err := tr.screenManager.HandleScreenSetupCommand(cmd.Data, nil)
+	if err != nil {
+		return fmt.Errorf("failed to set up screen: %v", err)
+	}
+
+	return nil
+}
+
 // Parse parses a raw byte stream into a Command
 func Parse(data []byte) (*Command, error) {
 	if len(data) < 2 {
