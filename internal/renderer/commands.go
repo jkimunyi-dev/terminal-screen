@@ -39,6 +39,16 @@ type Command struct {
 	Data   []byte
 }
 
+// CommandHandler defines the interface for handling different command types
+type CommandHandler interface {
+	HandleCommand(cmd *Command) error
+}
+
+// TerminalRenderer combines screen management and command handling
+type TerminalRenderer struct {
+	screenManager *ScreenManager
+}
+
 // Parse parses a raw byte stream into a Command
 func Parse(data []byte) (*Command, error) {
 	if len(data) < 2 {
