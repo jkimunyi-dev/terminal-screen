@@ -107,3 +107,10 @@ var (
 	ErrInsufficientData = fmt.Errorf("insufficient data for command")
 	ErrInvalidCommand   = fmt.Errorf("invalid command type")
 )
+
+// Add this method to the TerminalRenderer struct
+
+// GetCurrentScreen returns the current screen managed by the renderer
+func (tr *TerminalRenderer) GetCurrentScreen() *Screen {
+	return tr.screenManager.GetCurrentScreen()
+}
