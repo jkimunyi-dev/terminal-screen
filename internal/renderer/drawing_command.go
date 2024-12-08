@@ -52,3 +52,53 @@ func (tr *TerminalRenderer) handleDrawLineCommand(cmd *Command) error {
 	// Implement Bresenham's line drawing algorithm
 	return tr.drawLine(screen, x1, y1, x2, y2, colorIndex, lineChar)
 }
+
+// drawLine uses Bresenham's line algorithm to draw a line on the screen
+func (tr *TerminalRenderer) drawLine(screen *Screen, x1, y1, x2, y2 uint8, colorIndex uint8, lineChar rune) error {
+	steep := false
+	if abs(int(x1)-int(x2)) < abs(int(y1)-int(y2)) {
+		// Swap x and y coordinates to make the line more horizontal
+		x1, y1 = y1, x1
+		x2, y2 = y2, x2
+		steep = true
+	}
+
+	// Ensure line is drawn left to right
+	if int(x1) > int(x2) {
+		x1, x2 = x2, x1
+		y1, y2 = y2, y1
+	}
+
+	dx := int(x2) - int(x1)
+	dy := int(y2) - int(y1)
+	derror2 := abs(dy) * 2
+	error2 := 0
+	y := int(y1)
+
+	cell := Cell{
+		Char:    lineChar,
+		FgColor: colorIndex,
+	}
+
+	for x := int(x1); x <= int(x2); x++ {
+		var setX, setY uint8
+		if steep {
+			setX, setY = uint8(y), uint8(x)
+		} else {
+			setX, setY = uint8(x), uint8(y)
+		}
+
+		err := screen.SetCell(setX, setY, cell)
+		if err != nil {
+			return err
+		}
+
+		error2 += derror2
+		if error2 > dx {
+			y += sign(dy)
+			error2 -= dx * 2
+		}
+	}
+
+	return nil
+}
