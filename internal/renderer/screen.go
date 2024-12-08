@@ -30,6 +30,14 @@ type ScreenSetupOptions struct {
 	InitialFillCharacter rune
 }
 
+// DefaultScreenSetupOptions provides sensible defaults for screen initialization
+func DefaultScreenSetupOptions() *ScreenSetupOptions {
+	return &ScreenSetupOptions{
+		BackgroundColor:      0,   // Black background
+		InitialFillCharacter: ' ', // Space character
+	}
+}
+
 // NewScreen initializes a new screen with given dimensions and color mode
 func NewScreen(width, height uint8, mode ColorMode) *Screen {
 	screen := &Screen{
