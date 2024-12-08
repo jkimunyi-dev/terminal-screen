@@ -7,7 +7,7 @@ import (
 
 // Screen represents the terminal screen buffer
 type Screen struct {
-	mutex     sync.Mutex
+	mutex     sync.RWMutex // Changed from sync.Mutex to sync.RWMutex
 	width     uint8
 	height    uint8
 	colorMode ColorMode
@@ -53,8 +53,8 @@ func (s *Screen) SetCell(x, y uint8, cell Cell) error {
 
 // GetCell retrieves a cell from the screen buffer
 func (s *Screen) GetCell(x, y uint8) (Cell, error) {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
+	s.mutex.RLock()         // Now using RLock()
+	defer s.mutex.RUnlock() // And RUnlock()
 
 	if x >= s.width || y >= s.height {
 		return Cell{}, fmt.Errorf("coordinates out of bounds: (%d, %d)", x, y)
