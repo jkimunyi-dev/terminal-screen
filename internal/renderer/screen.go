@@ -192,3 +192,17 @@ func ValidateScreenSetupCommand(data []byte) error {
 		return fmt.Errorf("invalid color mode: %d (must be 0x00, 0x01, or 0x02)", colorMode)
 	}
 }
+
+// ColorModeToString provides a human-readable representation of color modes
+func ColorModeToString(mode ColorMode) string {
+	switch mode {
+	case ColorModeMonochrome:
+		return "Monochrome"
+	case ColorMode16:
+		return "16 Colors"
+	case ColorMode256:
+		return "256 Colors"
+	default:
+		return "Unknown"
+	}
+}
